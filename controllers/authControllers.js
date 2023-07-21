@@ -229,7 +229,7 @@ module.exports = {
             });
 
             res.status(200).send({
-                status: 201,
+                status: 200,
                 message: 'Email verification successful. Your email has been updated.'
             });
         } catch (error) {

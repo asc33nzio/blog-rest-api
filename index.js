@@ -8,7 +8,7 @@ const server = express();
 server.use(express.json());
 server.use(express.static('./public'));
 
-server.get('/', (req, res) => {
+server.options('/', (req, res) => {
     res.status(200).send('Welcome to SCP API.')
 });
 

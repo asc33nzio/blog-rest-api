@@ -63,7 +63,7 @@ module.exports = {
             });
 
             res.status(200).send({
-                status: 200,
+                status: 201,
                 message: "Avatar Upload Successful."
             });
         } catch (error) {
@@ -600,10 +600,12 @@ module.exports = {
                     publish,
                     users_that_liked,
                     likeCount,
-                    keywords
+                    keywords,
+                    id
                 } = article.toJSON();
 
                 return {
+                    articleId: id,
                     authorId,
                     category,
                     categoryId,
@@ -627,7 +629,7 @@ module.exports = {
             })
 
             res.status(200).send({
-                status: 201,
+                status: 200,
                 totalUserArticles,
                 userId: findUser.id,
                 username: findUser.username,
@@ -699,7 +701,7 @@ module.exports = {
             const totalUserLikedArticles = userLikedArticles.length;
 
             res.status(200).send({
-                status: 201,
+                status: 200,
                 totalUserLikedArticles,
                 userId: findUser.id,
                 username: findUser.username,
@@ -941,6 +943,46 @@ module.exports = {
             res.status(500).send({
                 status: 500,
                 message: "Internal server error.",
+            });
+        }
+    },
+    createNewCategory: async (req, res) => {
+        try {
+            const newCategory = req.body.category;
+
+            const findCategory = await categories.findOne({
+                where: {
+                    name: newCategory
+                }
+            });
+
+            if (!newCategory) {
+                return res.status(400).send({
+                    status: 404,
+                    message: "New category cannot be empty."
+                });
+            };
+
+            if (findCategory) {
+                return res.status(400).send({
+                    status: 400,
+                    message: `Category: ${newCategory} already exists, please choose another category to add.`
+                });
+            };
+
+            await categories.create({
+                name: newCategory
+            });
+
+            res.status(200).send({
+                status: 201,
+                message: `New category: ${newCategory} successfully created.`
+
+            });
+        } catch (error) {
+            res.status(500).send({
+                status: 500,
+                message: error
             });
         }
     }

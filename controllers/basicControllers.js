@@ -2,6 +2,7 @@ const db = require('../models');
 const user = db.User;
 const articles = db.Articles;
 const categories = db.Categories;
+const countries = db.Countries;
 const keywords = db.Keywords;
 const { Op } = require('sequelize');
 
@@ -189,6 +190,20 @@ module.exports = {
     getAllCategories: async (req, res) => {
         try {
             const result = await categories.findAll();
+            res.status(200).send({
+                status: 200,
+                result
+            });
+        } catch (error) {
+            res.status(400).send({
+                status: 400,
+                message: error
+            });
+        }
+    },
+    getAllCountries: async (req, res) => {
+        try {
+            const result = await countries.findAll();
             res.status(200).send({
                 status: 200,
                 result

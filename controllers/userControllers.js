@@ -4,6 +4,7 @@ const articles = db.Articles;
 const likedArticles = db.LikedArticles;
 const Keywords = db.Keywords;
 const categories = db.Categories;
+const countries = db.Countries;
 const changeEmailRequest = db.ChangeEmailRequest;
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -478,10 +479,23 @@ module.exports = {
                 });
             };
 
+            const findCountry = await countries.findOne({
+                where: {
+                    country: country
+                }
+            });
+
             if (!country) {
                 return res.status(400).send({
                     status: 404,
                     message: "Country of origin must not be empty."
+                });
+            };
+
+            if (!findCountry) {
+                return res.status(400).send({
+                    status: 404,
+                    message: `${country} doesn't exist in the list of valid countries.`
                 });
             };
 

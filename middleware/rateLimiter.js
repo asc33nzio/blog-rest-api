@@ -12,6 +12,7 @@ module.exports = {
 
             if (timeDifferenceInSeconds < 15) {
                 return res.status(429).send({
+                    status_group: "IETF RFC 6585",
                     status: 429,
                     message: 'You can only post one article every 15 seconds.'
                 });

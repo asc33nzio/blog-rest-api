@@ -6,6 +6,7 @@ const articles = db.Articles;
 router.get('/getAllArticles', basicControllers.getAllArticles);
 router.get('/getMostLikes', basicControllers.getMostLikes);
 router.get('/getAllCategories', basicControllers.getAllCategories);
+router.get('/getAllCountries', basicControllers.getAllCountries);
 router.get('/getAllKeywords', basicControllers.getAllKeywords);
 router.get('/blog/:id', basicControllers.getBlog);
 router.head('/blog/:id', async (req, res) => {

@@ -3,7 +3,7 @@ const { userControllers } = require('../controllers');
 const { verifyToken, checkRole } = require('../middleware/auth');
 const { multerUpload } = require('../middleware/multer');
 const { checkVerification, checkUsername, checkEmail, checkPhone, checkPasswordChange } = require('../middleware/validator');
-const { rateLimiter } = require('../middleware/rateLimiter')
+const { rateLimiter } = require('../middleware/rateLimiter');
 
 router.get('/getAllUsers', verifyToken, checkVerification, checkRole, userControllers.getAllUsers);
 router.get('/keepLogin', verifyToken, userControllers.keepLogin);

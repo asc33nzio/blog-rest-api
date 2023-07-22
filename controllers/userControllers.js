@@ -417,7 +417,7 @@ module.exports = {
     },
     writeArticle: async (req, res) => {
         try {
-            const { title, content, country, categoryId, videoURL, keywords } = JSON.parse(req.body.data);
+            const { title, content, country, categoryId, videoURL, keywords } = req.body;
             const authorId = req.user.id;
             const author = await user.findByPk(authorId);
 

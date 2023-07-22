@@ -56,7 +56,7 @@ module.exports = {
 
             const result = await articles.findAll(options);
 
-            const reorderedResult = result.map(article => {
+            const reorderedResult = await Promise.all(result.map(async (article) => {
                 const {
                     imgURL,
                     videoURL,
@@ -72,11 +72,20 @@ module.exports = {
                     users_that_liked,
                     likeCount,
                     keywords,
+                    author,
                     ...articleData
                 } = article.toJSON();
 
+                const userAvatar = await user.findOne({
+                    where: {
+                        id: authorId
+                    },
+                    attributes: ['avatar']
+                });
+
                 return {
                     ...articleData,
+                    author,
                     authorId,
                     category,
                     categoryId,
@@ -91,15 +100,21 @@ module.exports = {
                     likedBy,
                     users_that_liked,
                     keywords,
+                    [`${author}'s_avatar`]: userAvatar ? userAvatar.avatar : null
                 };
-            });
+            }));
+
+            const queryTotal = result.length;
+            const queryTotalPages = Math.ceil(queryTotal / pageSize);
 
             res.status(200).send({
                 status: 200,
-                totalArticles: parseInt(totalArticles),
+                totalArticlesInDB: parseInt(totalArticles),
+                pageSize: parseInt(pageSize),
                 totalPages,
                 currentPage: parseInt(currentPage),
-                pageSize: parseInt(pageSize),
+                totalQueryMatches: queryTotal,
+                queryTotalPages,
                 result: reorderedResult
             });
         } catch (error) {
@@ -134,7 +149,7 @@ module.exports = {
 
             const result = await articles.findAll(options);
 
-            const reorderedResult = result.map(article => {
+            const reorderedResult = await Promise.all(result.map(async (article) => {
                 const {
                     imgURL,
                     videoURL,
@@ -150,11 +165,20 @@ module.exports = {
                     users_that_liked,
                     likeCount,
                     keywords,
+                    author,
                     ...articleData
                 } = article.toJSON();
 
+                const userAvatar = await user.findOne({
+                    where: {
+                        id: authorId
+                    },
+                    attributes: ['avatar']
+                });
+
                 return {
                     ...articleData,
+                    author,
                     authorId,
                     category,
                     categoryId,
@@ -169,15 +193,16 @@ module.exports = {
                     likedBy,
                     users_that_liked,
                     keywords,
+                    [`${author}'s_avatar`]: userAvatar ? userAvatar.avatar : null
                 };
-            });
+            }));
 
             res.status(200).send({
                 status: 200,
-                totalArticles: parseInt(totalArticles),
+                totalArticlesInDB: parseInt(totalArticles),
+                pageSize: parseInt(pageSize),
                 totalPages,
                 currentPage: parseInt(currentPage),
-                pageSize: parseInt(pageSize),
                 result: reorderedResult
             });
         } catch (error) {
@@ -245,11 +270,13 @@ module.exports = {
                     users_that_liked,
                     likeCount,
                     keywords,
+                    author,
                     ...articleData
                 } = result.toJSON();
 
                 const reorderedResult = {
                     ...articleData,
+                    author,
                     authorId,
                     category,
                     categoryId,
@@ -266,9 +293,16 @@ module.exports = {
                     keywords
                 };
 
+                const userAvatar = await user.findOne({
+                    where: {
+                        id: authorId
+                    }
+                });
+
                 res.status(200).send({
                     status: 200,
-                    [`article_${articleId}`]: reorderedResult
+                    [`article_${articleId}`]: reorderedResult,
+                    [`${author}'s_avatar`]: userAvatar.dataValues.avatar
                 });
             };
         } catch (error) {
@@ -339,7 +373,7 @@ module.exports = {
     getAllKeywords: async (req, res) => {
         try {
             const result = await keywords.findAll();
-            const keywordCount = await keywords.count(); 
+            const keywordCount = await keywords.count();
             res.status(200).send({
                 status: 200,
                 total_keywords: keywordCount,

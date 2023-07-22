@@ -16,13 +16,12 @@ router.head('/blog/:id', async (req, res) => {
     const article = await articles.findByPk(articleId);
 
     if (!article) {
-      res.setHeader('X-ArticleExist', 'false');
-      res.setHeader('Content-Length', '0');
+      res.set('X-Article-Exist', 'false');
+      res.set('Content-Length', '0');
       return res.status(404).end();
     };
 
-    res.setHeader('X-ArticleExist', 'true');
-    console.log(res.getHeaders());
+    res.set('X-Article-Exist', 'true');
     return res.status(200).end();
   } catch (error) {
     return res.status(500).end();

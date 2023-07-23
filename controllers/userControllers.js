@@ -421,10 +421,23 @@ module.exports = {
             const authorId = req.user.id;
             const author = await user.findByPk(authorId);
 
+            const findTitle = await articles.findOne({
+                where: {
+                    title: title
+                }
+            });
+
             if (!title) {
                 return res.status(400).send({
                     status: 404,
                     message: "Title cannot be empty."
+                });
+            };
+
+            if (findTitle) {
+                return res.status(400).send({
+                    status: 400,
+                    message: "An article with the same name already exists. Please change the article title."
                 });
             };
 
@@ -997,6 +1010,40 @@ module.exports = {
             res.status(500).send({
                 status: 500,
                 message: error
+            });
+        }
+    },
+    banUser: async (req, res) => {
+        try {
+            const userId = req.params.id;
+
+            const findUser = await user.findOne({ where: { id: userId } });
+
+            if (!findUser) {
+                return res.status(400).send({
+                    status: 404,
+                    message: "User not found."
+                });
+            };
+
+            if (findUser.isBanned === true) {
+                return res.status(400).send({
+                    status: 400,
+                    message: "User already banned from SCP."
+                });
+            };
+
+            findUser.isBanned = true;
+            await findUser.save();
+
+            return res.status(200).send({
+                status: 200,
+                message: "User has been banned successfully."
+            });
+        } catch (error) {
+            return res.status(500).send({
+                status: 500,
+                message: "Internal server error.",
             });
         }
     }

@@ -14,11 +14,12 @@ router.patch('/changeEmail', verifyToken, checkVerification, checkEmail, userCon
 router.patch('/changePhone', verifyToken, checkVerification, checkPhone, userControllers.changePhone);
 router.patch('/changePassword', verifyToken, checkVerification, checkPasswordChange, userControllers.changePassword);
 router.post('/writeArticle', verifyToken, checkVerification, rateLimiter, multerUpload('./public/articles', 'ArticleIMG').single('file'), userControllers.writeArticle);
-router.put('/createNewCategory', verifyToken, checkVerification, checkRole, userControllers.createNewCategory);
+router.post('/createNewCategory', verifyToken, checkVerification, checkRole, userControllers.createNewCategory);
 router.get('/userCreatedArticles', verifyToken, checkVerification, userControllers.userCreatedArticles);
 router.get('/userLikedArticles', verifyToken, checkVerification, userControllers.userLikedArticles);
 router.delete('/deleteArticle/:id', verifyToken, checkVerification, userControllers.deleteArticle);
 router.post('/likeArticle/:id', verifyToken, checkVerification, userControllers.likeArticle);
 router.delete('/unlikeArticle/:id', verifyToken, checkVerification, userControllers.unlikeArticle);
+router.put('/banUser/:id', verifyToken, checkVerification, checkRole, userControllers.banUser);
 
 module.exports = router;

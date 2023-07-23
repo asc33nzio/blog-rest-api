@@ -107,6 +107,13 @@ module.exports = {
                 };
             };
 
+            if (checkLogin.isBanned === true) {
+                throw {
+                    status: 403,
+                    message: "You are banned from SCP."
+                };
+            };
+
             const isValid = await bcrypt.compare(password, checkLogin.password);
 
             if (!isValid) {
@@ -263,7 +270,7 @@ module.exports = {
 
             const payload = {
                 id: findUser.id
-            }
+            };
 
             const token = jwt.sign(payload, process.env.KEY_JWT, { expiresIn: '1h' });
             const htmlWithToken = tempResult.replace('TOKEN_PLACEHOLDER', token);

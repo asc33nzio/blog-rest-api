@@ -43,7 +43,7 @@ module.exports = {
 
             if (req.file.size > 1 * 1024 * 1024) {
                 return res.status(400).send({
-                    status: 401,
+                    status: 400,
                     message: "File size must not exceed 1Mb."
                 });
             };
@@ -579,7 +579,7 @@ module.exports = {
 
             const articleData = reorderObject(article.dataValues, desiredOrder);
 
-            res.status(200).send({
+            res.status(201).send({
                 status: 201,
                 message: "Article created successfully",
                 [`${author.dataValues.username}_wrote`]: articleData
@@ -628,11 +628,13 @@ module.exports = {
                     users_that_liked,
                     likeCount,
                     keywords,
-                    id
+                    id,
+                    title
                 } = article.toJSON();
 
                 return {
                     articleId: id,
+                    title,
                     authorId,
                     category,
                     categoryId,
@@ -703,11 +705,13 @@ module.exports = {
                     users_that_liked,
                     likeCount,
                     keywords,
-                    id
+                    id,
+                    title
                 } = article.toJSON();
 
                 return {
                     articleId: id,
+                    title,
                     authorId,
                     category,
                     categoryId,
@@ -1020,7 +1024,7 @@ module.exports = {
             const findUser = await user.findOne({ where: { id: userId } });
 
             if (!findUser) {
-                return res.status(400).send({
+                return res.status(404).send({
                     status: 404,
                     message: "User not found."
                 });

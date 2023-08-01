@@ -27,19 +27,19 @@ router.head('/blog/:id', async (req, res) => {
     return res.status(500).end();
   };
 });
-router.get('/public/avatars/:filename', basicControllers.getAvatar);
 router.get('/public/avatars/', (req, res) => {
   res.status(400).send({
     status: 404,
     message: 'Image name cannot be empty.',
   });
 });
-router.get('/public/articles/:filename', basicControllers.getArticleImage);
+router.get('/public/avatars/:filename', basicControllers.getAvatar);
 router.get('/public/articles/', (req, res) => {
   res.status(400).send({
     status: 404,
     message: 'Image name cannot be empty.',
   });
 });
+router.get('/public/articles/:filename', basicControllers.getArticleImage);
 
 module.exports = router;
